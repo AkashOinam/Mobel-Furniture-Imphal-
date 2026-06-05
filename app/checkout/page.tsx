@@ -55,6 +55,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState("");
+  const [showLoading, setShowLoading] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -80,6 +81,7 @@ export default function CheckoutPage() {
     }
 
     setIsSubmitting(true);
+    setShowLoading(true);
     const generatedOrderId = "REQ-" + Math.floor(100000 + Math.random() * 900000);
 
     try {
@@ -99,13 +101,17 @@ export default function CheckoutPage() {
         })),
       };
 
-      const res = await fetch("/api/quote", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      // Force a minimum loading time of 2.5 seconds to display the premium loading animation
+      const [res] = await Promise.all([
+        fetch("/api/quote", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }),
+        new Promise((resolve) => setTimeout(resolve, 2500))
+      ]);
 
       if (!res.ok) {
         throw new Error("Failed to submit request to server.");
@@ -117,10 +123,54 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error(error);
       alert("There was an issue submitting your request. Please try again.");
+      setShowLoading(false);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Render the premium loader while generating quotation
+  if (showLoading && !orderPlaced) {
+    return (
+      <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-charcoal-900">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center py-16 px-4">
+          <div className="max-w-md w-full bg-white dark:bg-charcoal-800 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 p-12 text-center space-y-8 flex flex-col items-center">
+            
+            {/* Modern Circular Loading Spinner */}
+            <div className="relative h-20 w-20">
+              {/* Outer pulsing ring */}
+              <div className="absolute inset-0 rounded-full border-4 border-brand-red/10 animate-pulse" />
+              {/* Spinning circular track */}
+              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-brand-red border-r-brand-red animate-spin" />
+              {/* Inner detail */}
+              <div className="absolute inset-2 rounded-full bg-slate-50 dark:bg-zinc-900/50 flex items-center justify-center">
+                <div className="h-2.5 w-2.5 rounded-full bg-brand-red animate-ping" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="font-heading text-xl font-bold text-slate-900 dark:text-zinc-50 tracking-tight">
+                Generating Quotation
+              </h2>
+              <p className="text-xs text-slate-400 dark:text-zinc-500 max-w-[250px] mx-auto leading-relaxed">
+                Analyzing select furniture items and compiling customized request details...
+              </p>
+            </div>
+            
+            {/* Bounce indicators */}
+            <div className="flex gap-1.5 justify-center pt-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-brand-red/30 animate-bounce" style={{ animationDelay: "0ms" }} />
+              <div className="h-1.5 w-1.5 rounded-full bg-brand-red/60 animate-bounce" style={{ animationDelay: "150ms" }} />
+              <div className="h-1.5 w-1.5 rounded-full bg-brand-red animate-bounce" style={{ animationDelay: "300ms" }} />
+            </div>
+
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   // If request is placed successfully, render the Success screen
   if (orderPlaced) {
@@ -129,8 +179,11 @@ export default function CheckoutPage() {
         <Navbar />
         <main className="flex-grow flex items-center justify-center py-16 px-4">
           <div className="max-w-xl w-full bg-white dark:bg-charcoal-800 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 p-8 text-center space-y-6">
-            <div className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-950/30 p-5 text-emerald-500">
-              <CheckCircle2 className="h-16 w-16" />
+            <div className="inline-flex items-center justify-center p-2">
+              <svg className="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle className="success-checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                <path className="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+              </svg>
             </div>
 
             <div className="space-y-2">
