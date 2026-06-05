@@ -29,6 +29,7 @@ function HomePageContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   // Sync state with URL search parameters
   useEffect(() => {
@@ -39,16 +40,36 @@ function HomePageContent() {
     setSelectedCategory(cat);
   }, [searchParams]);
 
-  // Handle showing the social promo popup
+  // Handle showing the social promo popup or notification
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowPopup(true);
+      const isClosed = localStorage.getItem("mobel_promo_popup_closed") === "true";
+      const isNotifDismissed = localStorage.getItem("mobel_promo_notification_dismissed") === "true";
+
+      if (isClosed) {
+        if (!isNotifDismissed) {
+          setShowNotification(true);
+        }
+      } else {
+        setShowPopup(true);
+      }
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
-  const closePopup = () => {
+  const closePopup = (followed = false) => {
     setShowPopup(false);
+    localStorage.setItem("mobel_promo_popup_closed", "true");
+    
+    if (followed) {
+      localStorage.setItem("mobel_promo_notification_dismissed", "true");
+      setShowNotification(false);
+    } else {
+      const isNotifDismissed = localStorage.getItem("mobel_promo_notification_dismissed") === "true";
+      if (!isNotifDismissed) {
+        setShowNotification(true);
+      }
+    }
   };
 
   const handleSearchChange = (val: string) => {
@@ -528,7 +549,7 @@ function HomePageContent() {
           <div className="relative w-full max-w-sm rounded-3xl bg-white dark:bg-charcoal-900 border border-slate-150 dark:border-zinc-800 p-8 shadow-2xl text-center space-y-6 transform scale-100 transition-transform duration-300">
             {/* Close Button */}
             <button
-              onClick={closePopup}
+              onClick={() => closePopup(false)}
               className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 hover:text-slate-650 transition-colors"
               aria-label="Close popup"
             >
@@ -558,11 +579,52 @@ function HomePageContent() {
               href="https://linktr.ee/mobelfurnitureimphal"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={closePopup}
+              onClick={() => closePopup(true)}
               className="w-full flex items-center justify-center rounded-full bg-brand-red py-3.5 text-sm font-semibold text-white hover:bg-brand-red-hover transition-colors shadow-lg shadow-brand-red/20 uppercase tracking-wider"
             >
               FOLLOW
             </a>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Right Toast/Notification Popup */}
+      {showNotification && (
+        <div className="fixed bottom-6 right-6 z-40 max-w-sm rounded-2xl bg-white dark:bg-charcoal-900 border border-slate-150 dark:border-zinc-800 p-4.5 shadow-xl flex items-center gap-4 animate-in slide-in-from-bottom-5 duration-300">
+          <div className="h-10 w-10 rounded-full bg-brand-red/10 flex items-center justify-center text-brand-red flex-shrink-0">
+            <Sparkles className="h-5 w-5 animate-pulse" />
+          </div>
+          <div className="flex-1 min-w-0 pr-2">
+            <h4 className="text-xs font-bold text-slate-900 dark:text-zinc-50">
+              Special Offer Active!
+            </h4>
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">
+              Get <span className="text-brand-red font-bold">₹1000 OFF</span> today.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://linktr.ee/mobelfurnitureimphal"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                setShowNotification(false);
+                localStorage.setItem("mobel_promo_notification_dismissed", "true");
+              }}
+              className="rounded-full bg-brand-red px-3 py-1.5 text-[10px] font-bold text-white hover:bg-brand-red-hover transition-colors uppercase tracking-wider whitespace-nowrap"
+            >
+              FOLLOW
+            </a>
+            <button
+              onClick={() => {
+                setShowNotification(false);
+                localStorage.setItem("mobel_promo_notification_dismissed", "true");
+              }}
+              className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 hover:text-slate-650 transition-colors"
+              aria-label="Dismiss notification"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
       )}
