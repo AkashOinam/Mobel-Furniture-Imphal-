@@ -60,12 +60,24 @@ export default function CheckoutPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "phone") {
+      const numericValue = value.replace(/\D/g, "");
+      if (numericValue.length <= 10) {
+        setForm((prev) => ({ ...prev, [name]: numericValue }));
+      }
+      return;
+    }
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) return;
+
+    if (form.phone.length !== 10) {
+      alert("Please enter a valid 10-digit phone number.");
+      return;
+    }
 
     setIsSubmitting(true);
     const generatedOrderId = "REQ-" + Math.floor(100000 + Math.random() * 900000);
@@ -74,7 +86,7 @@ export default function CheckoutPage() {
       const payload = {
         orderId: generatedOrderId,
         name: form.name,
-        phone: form.phone,
+        phone: "+91 " + form.phone,
         email: form.email,
         district: form.district,
         address: form.address,
@@ -153,7 +165,7 @@ export default function CheckoutPage() {
             <div className="rounded-xl border border-brand-red/10 bg-brand-red/5 p-4 text-xs text-left max-w-md mx-auto flex items-start gap-2">
               <ShieldCheck className="h-5 w-5 text-brand-red flex-shrink-0 mt-0.5" />
               <p className="text-slate-600 dark:text-zinc-400 leading-relaxed">
-                <strong>Next Step:</strong> Our Imphal showroom manager will contact you at <strong>{form.phone}</strong> via phone call or WhatsApp to provide the customized pricing catalog and discuss delivery/assembly options.
+                <strong>Next Step:</strong> Our Imphal showroom manager will contact you at <strong>+91 {form.phone}</strong> via phone call or WhatsApp to provide the customized pricing catalog and discuss delivery/assembly options.
               </p>
             </div>
 
@@ -246,15 +258,21 @@ export default function CheckoutPage() {
 
                     <div className="space-y-1.5">
                       <label className="text-xs font-semibold text-slate-500 dark:text-zinc-400">Phone Number *</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        value={form.phone}
-                        onChange={handleInputChange}
-                        placeholder="e.g. +91 9876543210"
-                        className="w-full rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 px-3.5 py-2 text-sm focus:border-brand-red focus:outline-hidden dark:text-white transition-colors"
-                      />
+                      <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 overflow-hidden focus-within:border-brand-red focus-within:ring-1 focus-within:ring-brand-red transition-all">
+                        <span className="flex items-center justify-center bg-slate-100 dark:bg-zinc-700 text-slate-600 dark:text-zinc-350 px-3 text-sm font-semibold border-r border-slate-200 dark:border-zinc-700 select-none">
+                          +91
+                        </span>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          value={form.phone}
+                          onChange={handleInputChange}
+                          placeholder=""
+                          maxLength={10}
+                          className="w-full bg-transparent px-3.5 py-2 text-sm focus:outline-none dark:text-white transition-colors"
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-1.5 md:col-span-2">
