@@ -96,8 +96,13 @@ body {
 
 /* LTR Marquee Animation */
 @keyframes marquee-ltr {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0%); }
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
 }
 
 .animate-marquee-ltr {
@@ -112,9 +117,12 @@ body {
 }
 
 @keyframes checkmark-scale {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: none;
   }
+
   50% {
     transform: scale3d(1.1, 1.1, 1);
   }
