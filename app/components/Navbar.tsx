@@ -25,12 +25,16 @@ export default function Navbar() {
       // Enable scroll shadow styling
       setScrolled(currentScrollY > 20);
 
-      // Only show the navbar when scroll is within the hero section (<= 450px)
-      if (currentScrollY <= 450) {
+      // Show navbar when scrolling up or near the top, hide when scrolling down
+      if (currentScrollY <= 50) {
         setVisible(true);
-      } else {
+      } else if (currentScrollY < lastScrollY.current) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY.current) {
         setVisible(false);
       }
+
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

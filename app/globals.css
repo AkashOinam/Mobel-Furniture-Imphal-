@@ -50,7 +50,6 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -102,7 +101,7 @@ body {
 }
 
 .animate-marquee-ltr {
-  animation: marquee-ltr 50s linear infinite;
+  animation: marquee-ltr 80s linear infinite;
 }
 
 /* Success Checkmark Draw Animation */

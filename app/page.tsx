@@ -31,6 +31,14 @@ function HomePageContent() {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
+  // Reset scroll to top on page reload/mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   // Sync state with URL search parameters
   useEffect(() => {
     const query = searchParams.get("search") || "";
