@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Möbel Furniture Imphal | Premium Home & Office Furniture",
     description: "Retail partner of Möbel Furniture Kolkata & Local Custom Furniture Workshop in Imphal.",
-    images: ["/logo.svg"],
+    images: ["/logo-v2.svg"],
   },
 };
 

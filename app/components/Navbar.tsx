@@ -52,7 +52,7 @@ export default function Navbar() {
               {Array.from({ length: 10 }).map((_, itemIdx) => (
                 <React.Fragment key={itemIdx}>
                   <span>Wedding Sale is Live!</span>
-                  <span className="text-yellow-300">Up to 40% OFF</span>
+                  <span>Up to 40% OFF</span>
                 </React.Fragment>
               ))}
             </div>
@@ -61,7 +61,7 @@ export default function Navbar() {
               {Array.from({ length: 10 }).map((_, itemIdx) => (
                 <React.Fragment key={itemIdx}>
                   <span>Wedding Sale is Live!</span>
-                  <span className="text-yellow-300">Up to 40% OFF</span>
+                  <span>Up to 40% OFF</span>
                 </React.Fragment>
               ))}
             </div>
@@ -74,10 +74,10 @@ export default function Navbar() {
             <div className="flex-shrink-0 md:static absolute left-1/2 -translate-x-1/2 md:translate-x-0 top-1/2 -translate-y-1/2 md:top-auto md:translate-y-0">
               <Link href="/" className="flex items-center">
                 <Image
-                  src="/logo.svg"
+                  src="/logo-v2.svg"
                   alt="Möbel Furniture"
-                  width={143}
-                  height={40}
+                  width={172}
+                  height={48}
                   className="object-contain"
                 />
               </Link>

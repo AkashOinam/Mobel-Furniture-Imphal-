@@ -12,11 +12,11 @@
 }
 
 @theme {
-  /* Brand color: Crimson Red from the logo */
-  --color-brand-red: #c81b2e;
-  --color-brand-red-hover: #a81322;
-  --color-brand-red-light: #fff5f5;
-  --color-brand-red-dark: #7e0a16;
+  /* Brand color: Blue from the new logo */
+  --color-brand-red: #167ec2;
+  --color-brand-red-hover: #0f67a1;
+  --color-brand-red-light: #f0f7fc;
+  --color-brand-red-dark: #0a3d5f;
 
   /* Premium sand and cream colors for warm sections */
   --color-sand-50: #fbfbfa;
@@ -102,7 +102,7 @@ body {
 }
 
 .animate-marquee-ltr {
-  animation: marquee-ltr 30s linear infinite;
+  animation: marquee-ltr 50s linear infinite;
 }
 
 /* Success Checkmark Draw Animation */
