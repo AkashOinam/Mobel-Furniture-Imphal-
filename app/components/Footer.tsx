@@ -80,7 +80,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Opening Hours & Newsletter */}
+          {/* Column 4: Opening Hours & Social Media */}
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase mb-4 flex items-center gap-2">
@@ -89,25 +89,6 @@ export default function Footer() {
               </h3>
               <p className="text-sm text-slate-500">Monday - Sunday: 9:00 AM - 6:00 PM</p>
 
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase">Stay Updated</h3>
-              <p className="text-xs text-slate-500">Subscribe for catalogs and new stock arrivals.</p>
-              <form className="flex max-w-md gap-2" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  required
-                  className="w-full min-w-0 flex-auto rounded-md border-0 bg-slate-50 px-3.5 py-2 text-slate-950 shadow-xs ring-1 ring-inset ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-brand-red text-sm"
-                />
-                <button
-                  type="submit"
-                  className="flex-none rounded-md bg-brand-red px-3.5 py-2 text-sm font-semibold text-white shadow-xs hover:bg-brand-red-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red transition-colors"
-                >
-                  Join
-                </button>
-              </form>
             </div>
 
             {/* Social Media */}
