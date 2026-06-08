@@ -156,7 +156,7 @@ function HomePageContent() {
               </h1>
 
               <p className="max-w-xl text-base sm:text-lg text-slate-500 dark:text-zinc-400 leading-relaxed mx-auto lg:mx-0">
-                Explore an exclusive collection of luxury designs imported from <strong>Möbel Furniture Kolkata</strong>. Elevate your spaces with standard, high-durability, factory-crafted furniture.
+                Transform your home and workspace with thoughtfully crafted furniture that blends timeless design, exceptional durability, and everyday comfort.
               </p>
 
               <div className="flex flex-col items-center sm:flex-row justify-center lg:justify-start gap-3">
