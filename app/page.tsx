@@ -12,7 +12,6 @@ import {
   Search,
   MapPin,
   Phone,
-  Award,
   Truck,
   Wrench,
   ShieldCheck,
@@ -231,17 +230,7 @@ function HomePageContent() {
       {/* Brand Partnership & Trust Banner */}
       <section className="bg-white dark:bg-charcoal-950 py-10 border-b border-slate-100 dark:border-zinc-800/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-
-            <div className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-charcoal-800 transition-colors">
-              <div className="rounded-lg bg-brand-red/5 p-3 text-brand-red">
-                <Award className="h-6 w-6" />
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Kolkata Partnership</h4>
-                <p className="text-xs text-slate-400 dark:text-zinc-500">Official retail furniture supply</p>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
             <div className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-charcoal-800 transition-colors">
               <div className="rounded-lg bg-brand-red/5 p-3 text-brand-red">
