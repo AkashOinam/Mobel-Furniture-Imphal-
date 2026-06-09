@@ -21,36 +21,6 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: "bed-royal-teak",
-    name: "Royal Teak King Size Bed",
-    category: "Bed",
-    price: 48500,
-    description: "Experience luxury sleep with our premium King Size Bed sourced from Mobel Kolkata. Made with high-grade solid teak wood and a rich mahogany finish, it brings elegance and sturdiness to your master bedroom.",
-    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"
-    ],
-    section: "home",
-    isHouseManufactured: false,
-    features: [
-      "Crafted from premium solid teak wood",
-      "Hydraulic under-bed storage space",
-      "Termite and pest resistant treatment",
-      "Elegant curved headboard with upholstery cushioning"
-    ],
-    specifications: {
-      material: "Premium Solid Teak Wood & Velvet Fabric Upholstery",
-      dimensions: "78 W x 72 D x 42 H inches (King Size)",
-      warranty: "5 Years Manufacturer Warranty",
-      assembly: "Professional assembly provided by Mobel team"
-    },
-    rating: 4.8,
-    reviewsCount: 34
-  },
-  {
     id: "sofa-cloud-comfort",
     name: "Cloud Comfort 3-Seater Sofa",
     category: "Sofa",
@@ -79,30 +49,6 @@ export const products: Product[] = [
     },
     rating: 4.9,
     reviewsCount: 52
-  },
-  {
-    id: "wardrobe-classic-4door",
-    name: "Imperial 4-Door Wardrobe",
-    category: "Wardrobe",
-    price: 52000,
-    description: "An elegant, spacious wardrobe from the Mobel Kolkata Collection. Featuring sliding door mechanisms, integrated mirrors, and smart compartment layout including security lockers for valuables.",
-    image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80",
-    section: "home",
-    isHouseManufactured: false,
-    features: [
-      "Smooth silent sliding door mechanism",
-      "Dual full-length dressing mirrors",
-      "Dedicated digital locker compartment",
-      "Scratch-resistant premium laminate finish"
-    ],
-    specifications: {
-      material: "Engineered Wood, Toughened Glass, Premium Laminates",
-      dimensions: "72 W x 22 D x 80 H inches",
-      warranty: "3 Years Manufacturer Warranty",
-      assembly: "Required (Assembled at delivery location)"
-    },
-    rating: 4.7,
-    reviewsCount: 28
   },
   {
     id: "showcase-minimal-oak",
@@ -943,30 +889,6 @@ export const products: Product[] = [
     },
     rating: 4.6,
     reviewsCount: 51
-  },
-  {
-    id: "chair-executive-leather",
-    name: "Vanguard High-Back Leather Chair",
-    category: "Office Chair",
-    price: 24000,
-    description: "Add status and command to your desk. Upholstered in premium full-grain black leather with polished aluminium detailing, and sync-tilt recline mechanisms.",
-    image: "https://images.unsplash.com/photo-1580481072645-022f9a6dbf27?auto=format&fit=crop&w=800&q=80",
-    section: "office",
-    isHouseManufactured: false,
-    features: [
-      "Imported premium full-grain black leather padding",
-      "Central sync-tilt mechanism with lock settings",
-      "Heavy duty polished aluminium star base",
-      "Padded leather wrapped loop armrests"
-    ],
-    specifications: {
-      material: "Genuine Full-grain Leather, Aluminium alloy base, Gas lift",
-      dimensions: "28 W x 26 D x 48-52 H inches",
-      warranty: "3 Years Manufacturer Warranty",
-      assembly: "Delivered pre-assembled"
-    },
-    rating: 4.9,
-    reviewsCount: 32
   },
   {
     id: "chair-task-breathable",
