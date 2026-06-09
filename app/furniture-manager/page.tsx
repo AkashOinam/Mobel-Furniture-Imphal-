@@ -23,7 +23,6 @@ export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authError, setAuthError] = useState('');
   const [authenticating, setAuthenticating] = useState(false);
-  const [checkingSavedSession, setCheckingSavedSession] = useState(true);
 
   // Load products data helper
   async function loadProductsData() {
@@ -42,8 +41,8 @@ export default function AdminPage() {
   }
 
   // Verify submitted password
-  async function verifyPassword(pwd: string, auto = false) {
-    if (!auto) setAuthenticating(true);
+  async function verifyPassword(pwd: string) {
+    setAuthenticating(true);
     setAuthError('');
     try {
       const res = await fetch('/api/admin/auth', {
@@ -52,30 +51,17 @@ export default function AdminPage() {
         body: JSON.stringify({ password: pwd })
       });
       if (res.ok) {
-        sessionStorage.setItem('admin_session_key', pwd);
         setIsLoggedIn(true);
         loadProductsData();
       } else {
-        if (!auto) setAuthError('Incorrect password. Please try again.');
-        sessionStorage.removeItem('admin_session_key');
+        setAuthError('Incorrect password. Please try again.');
       }
     } catch (err) {
-      if (!auto) setAuthError('Authentication failed. Connection error.');
+      setAuthError('Authentication failed. Connection error.');
     } finally {
       setAuthenticating(false);
-      setCheckingSavedSession(false);
     }
   }
-
-  // Check saved session on mount
-  useEffect(() => {
-    const savedPassword = sessionStorage.getItem('admin_session_key');
-    if (savedPassword) {
-      verifyPassword(savedPassword, true);
-    } else {
-      setCheckingSavedSession(false);
-    }
-  }, []);
 
   // Section filter for the product selector list
   const [spaceFilter, setSpaceFilter] = useState<'all' | 'home' | 'office'>('all');
@@ -247,7 +233,7 @@ export default function AdminPage() {
         const uploadRes = await fetch('/api/admin/upload', {
           method: 'POST',
           headers: {
-            'Authorization': sessionStorage.getItem('admin_session_key') || ''
+            'Authorization': password
           },
           body: formData,
         });
@@ -274,7 +260,7 @@ export default function AdminPage() {
            const uploadRes = await fetch('/api/admin/upload', {
             method: 'POST',
             headers: {
-              'Authorization': sessionStorage.getItem('admin_session_key') || ''
+              'Authorization': password
             },
             body: formData,
           });
@@ -297,7 +283,7 @@ export default function AdminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': sessionStorage.getItem('admin_session_key') || ''
+          'Authorization': password
         },
         body: JSON.stringify({
           productId: activeId,
@@ -399,7 +385,7 @@ export default function AdminPage() {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': sessionStorage.getItem('admin_session_key') || ''
+          'Authorization': password
         },
         body: JSON.stringify({ productId: selectedProductId }),
       });
@@ -429,13 +415,7 @@ export default function AdminPage() {
     }
   };
 
-  if (checkingSavedSession) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-900">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-red"></div>
-      </div>
-    );
-  }
+
 
   if (!isLoggedIn) {
     return (
@@ -498,14 +478,26 @@ export default function AdminPage() {
             <p className="text-xs text-slate-500">Real Product Photo & Text Content Editor</p>
           </div>
         </div>
-        <Link
-          href={selectedProduct ? `/product/${selectedProduct.id}` : '/'}
-          target="_blank"
-          className="flex items-center gap-2 px-4 py-2 border border-slate-200 hover:border-slate-300 rounded-lg text-sm font-medium transition-colors bg-white shadow-2xs hover:bg-slate-50"
-        >
-          <Eye className="w-4 h-4 text-slate-500" />
-          View Product Page
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href={selectedProduct ? `/product/${selectedProduct.id}` : '/'}
+            target="_blank"
+            className="flex items-center gap-2 px-4 py-2 border border-slate-200 hover:border-slate-300 rounded-lg text-sm font-medium transition-colors bg-white shadow-2xs hover:bg-slate-50"
+          >
+            <Eye className="w-4 h-4 text-slate-500" />
+            View Product Page
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              setIsLoggedIn(false);
+              setPassword('');
+            }}
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer"
+          >
+            Log Out
+          </button>
+        </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">

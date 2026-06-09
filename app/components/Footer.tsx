@@ -11,7 +11,22 @@ export default function Footer() {
 
           {/* Column 1: Brand & Contact Info */}
           <div className="space-y-6 lg:pr-8">
-            <Link href="/" className="flex items-center">
+            <div 
+              onClick={(e) => {
+                const target = e.currentTarget as any;
+                if (target.clickTimeout) {
+                  clearTimeout(target.clickTimeout);
+                  target.clickTimeout = null;
+                  window.location.href = '/furniture-manager';
+                } else {
+                  target.clickTimeout = setTimeout(() => {
+                    target.clickTimeout = null;
+                    window.location.href = '/';
+                  }, 250);
+                }
+              }}
+              className="cursor-pointer inline-block"
+            >
               <Image
                 src="/logo-v2.svg"
                 alt="Möbel Furniture Logo"
@@ -19,7 +34,7 @@ export default function Footer() {
                 height={44}
                 className="object-contain"
               />
-            </Link>
+            </div>
             <p className="text-sm text-slate-500 leading-relaxed">
               Crafting elegant living and working spaces with premium furniture that blends style, comfort, and durability for every lifestyle.
             </p>
