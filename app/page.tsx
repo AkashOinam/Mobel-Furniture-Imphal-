@@ -231,23 +231,21 @@ function HomePageContent() {
 
             {/* Right visual column */}
             <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 bg-white">
                 <Image
-                  src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1000&q=80"
-                  alt="Möbel Luxury Sofa Set"
+                  src="/sofa-hero.jpg"
+                  alt="Möbel Lebanon Comfort Sofa Set"
                   fill
                   priority
-                  className="object-cover"
+                  className="object-contain bg-white p-4"
                 />
 
                 {/* Floating overlay card */}
                 <div className="absolute bottom-5 left-5 right-5 rounded-xl bg-white/95 dark:bg-charcoal-900/95 p-4.5 shadow-lg border border-slate-100 dark:border-zinc-800 backdrop-blur-xs flex items-center justify-between">
                   <div className="space-y-1">
                     <span className="text-[10px] font-bold tracking-widest text-brand-red uppercase">Featured Collection</span>
-                    <h3 className="text-sm font-semibold text-slate-950 dark:text-white">Cloud Comfort 3-Seater</h3>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400">Möbel Kolkata Selection</p>
+                    <h3 className="text-sm font-semibold text-slate-950 dark:text-white">Lebanon comfort 3+2+1</h3>
                   </div>
-                  <span className="text-xs font-bold text-brand-red uppercase tracking-wider">Request Quote</span>
                 </div>
               </div>
             </div>
