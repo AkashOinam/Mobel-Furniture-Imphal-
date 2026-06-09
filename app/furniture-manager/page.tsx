@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { products as initialProducts, Product } from '@/app/data/products';
-import { Upload, ArrowLeft, Image as ImageIcon, Sparkles, CheckCircle, AlertCircle, Eye, Save, Settings, PlusCircle, Trash2, Filter, X, Plus } from 'lucide-react';
+import { Upload, ArrowLeft, Image as ImageIcon, Sparkles, CheckCircle, AlertCircle, Eye, Save, Settings, PlusCircle, Trash2, Filter, X, Plus, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 
 const HOME_CATEGORIES = [
@@ -428,7 +428,7 @@ export default function AdminPage() {
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
               <Sparkles className="w-6 h-6 text-brand-red animate-pulse" />
-              Möbel Imphal Portal
+              Admin Portal
             </h1>
             <p className="text-xs text-slate-400">Enter your administrator password to proceed</p>
           </div>
@@ -473,9 +473,8 @@ export default function AdminPage() {
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-brand-red" />
-              Stupendous Interior Admin Panel
+              Admin Portal
             </h1>
-            <p className="text-xs text-slate-500">Real Product Photo & Text Content Editor</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -539,21 +538,26 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <select
-              value={selectedProductId}
-              onChange={(e) => {
-                setSelectedProductId(e.target.value);
-                setStatus({ type: null, message: '' });
-              }}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-hidden focus:ring-2 focus:ring-brand-red focus:bg-white transition-all text-sm font-medium"
-            >
-              <option value="new">+ Add New Product --</option>
-              {filteredProducts.map((p) => (
-                <option key={p.id} value={p.id}>
-                  [{p.category}] {p.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative w-full">
+              <select
+                value={selectedProductId}
+                onChange={(e) => {
+                  setSelectedProductId(e.target.value);
+                  setStatus({ type: null, message: '' });
+                }}
+                className="w-full appearance-none pl-4 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-hidden focus:ring-2 focus:ring-brand-red focus:bg-white transition-all text-sm font-medium"
+              >
+                <option value="new">+ Add New Product --</option>
+                {filteredProducts.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    [{p.category}] {p.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-500">
+                <ChevronDown className="h-4 w-4" />
+              </div>
+            </div>
           </div>
 
           {/* Catalogue Configurations */}
@@ -575,27 +579,37 @@ export default function AdminPage() {
 
               <div className="flex flex-col gap-1.5 md:col-span-1">
                 <label className="text-xs font-semibold text-slate-600">Section Space</label>
-                <select
-                  value={section}
-                  onChange={(e) => setSection(e.target.value as any)}
-                  className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
-                >
-                  <option value="home">Home Spaces</option>
-                  <option value="office">Office Spaces</option>
-                </select>
+                <div className="relative w-full">
+                  <select
+                    value={section}
+                    onChange={(e) => setSection(e.target.value as any)}
+                    className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
+                  >
+                    <option value="home">Home Spaces</option>
+                    <option value="office">Office Spaces</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-500">
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col gap-1.5 md:col-span-2">
                 <label className="text-xs font-semibold text-slate-600">Category</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
-                >
-                  {(section === 'home' ? HOME_CATEGORIES : OFFICE_CATEGORIES).map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
+                <div className="relative w-full">
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
+                  >
+                    {(section === 'home' ? HOME_CATEGORIES : OFFICE_CATEGORIES).map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-500">
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </div>
+                </div>
               </div>
             </div>
 
