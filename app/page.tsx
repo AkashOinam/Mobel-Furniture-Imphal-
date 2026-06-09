@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProductCard from "./components/ProductCard";
+import ProductCardSkeleton from "./components/ProductCardSkeleton";
 import { products } from "./data/products";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -29,6 +30,7 @@ function HomePageContent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Reset scroll to top on page reload/mount
   useEffect(() => {
@@ -46,6 +48,15 @@ function HomePageContent() {
     const cat = searchParams.get("category") || "All";
     setSelectedCategory(cat);
   }, [searchParams]);
+
+  // Trigger loading skeleton simulation when category or search query changes
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [selectedCategory, searchQuery]);
 
   // Handle showing the social promo popup or notification
   useEffect(() => {
@@ -367,7 +378,13 @@ function HomePageContent() {
           </div>
 
           {/* Results Grid */}
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {[...Array(8)].map((_, idx) => (
+                <ProductCardSkeleton key={idx} />
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16 space-y-3">
               <p className="text-base font-semibold text-slate-700 dark:text-zinc-300">No products found matching your search</p>
               <p className="text-sm text-slate-400">Try searching for other keywords, or reset the filters.</p>
@@ -631,9 +648,40 @@ function HomePageContent() {
   );
 }
 
+function HomePageSkeleton() {
+  return (
+    <div className="flex flex-col min-h-screen bg-white dark:bg-charcoal-900 animate-pulse">
+      {/* Skeleton Navbar */}
+      <div className="h-16 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between px-6 bg-white dark:bg-charcoal-900">
+        <div className="h-8 w-32 bg-slate-150 dark:bg-zinc-800 rounded" />
+        <div className="hidden md:flex gap-6">
+          <div className="h-4 w-16 bg-slate-150 dark:bg-zinc-800 rounded" />
+          <div className="h-4 w-16 bg-slate-150 dark:bg-zinc-800 rounded" />
+          <div className="h-4 w-16 bg-slate-150 dark:bg-zinc-800 rounded" />
+        </div>
+        <div className="h-8 w-20 bg-slate-150 dark:bg-zinc-800 rounded-full" />
+      </div>
+
+      {/* Skeleton Hero */}
+      <div className="py-20 px-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center flex-1">
+        <div className="space-y-6">
+          <div className="h-4 w-48 bg-slate-150 dark:bg-zinc-800 rounded" />
+          <div className="h-12 w-full bg-slate-150 dark:bg-zinc-800 rounded" />
+          <div className="h-6 w-5/6 bg-slate-150 dark:bg-zinc-800 rounded" />
+          <div className="flex gap-4 pt-4">
+            <div className="h-10 w-32 bg-slate-150 dark:bg-zinc-800 rounded-full" />
+            <div className="h-10 w-32 bg-slate-150 dark:bg-zinc-800 rounded-full" />
+          </div>
+        </div>
+        <div className="aspect-[4/3] bg-slate-150 dark:bg-zinc-800 rounded-2xl w-full" />
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white dark:bg-charcoal-900 flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<HomePageSkeleton />}>
       <HomePageContent />
     </Suspense>
   );

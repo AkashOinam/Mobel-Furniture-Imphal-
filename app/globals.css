@@ -45,6 +45,10 @@ h6 {
   font-family: var(--font-heading), var(--font-sans);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background-color: var(--background);
