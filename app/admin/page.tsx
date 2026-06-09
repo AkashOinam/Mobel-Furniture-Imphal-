@@ -6,7 +6,7 @@ import { Upload, ArrowLeft, Image as ImageIcon, Sparkles, CheckCircle, AlertCirc
 import Link from 'next/link';
 
 const HOME_CATEGORIES = [
-  'Bed', 'Sofa', 'Wardrobe', 'Showcase', 'Center Table', 'Dresser', 
+  'Bed', 'Sofa', 'Wardrobe', 'Showcase', 'Center Table', 'Dresser',
   'Dining Table', 'Mattress', 'Table'
 ];
 
@@ -16,8 +16,8 @@ const OFFICE_CATEGORIES = [
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [selectedProductId, setSelectedProductId] = useState<string>(initialProducts[0]?.id || '');
-  
+  const [selectedProductId, setSelectedProductId] = useState<string>(initialProducts[0]?.id || 'new');
+
   // Section filter for the product selector list
   const [spaceFilter, setSpaceFilter] = useState<'all' | 'home' | 'office'>('all');
 
@@ -33,6 +33,9 @@ export default function AdminPage() {
   const [isHouseManufactured, setIsHouseManufactured] = useState<boolean>(false);
 
   // Specifications
+  const [featuresInput, setFeaturesInput] = useState<string>('');
+
+  // Specifications
   const [material, setMaterial] = useState<string>('');
   const [dimensions, setDimensions] = useState<string>('');
   const [warranty, setWarranty] = useState<string>('');
@@ -41,10 +44,10 @@ export default function AdminPage() {
   // Image upload states
   const [mainFile, setMainFile] = useState<File | null>(null);
   const [mainPreview, setMainPreview] = useState<string>('');
-  
+
   const [galleryFiles, setGalleryFiles] = useState<(File | null)[]>([null, null, null, null]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>(['', '', '', '']);
-  
+
   const [saving, setSaving] = useState<boolean>(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
 
@@ -72,7 +75,8 @@ export default function AdminPage() {
       setDimensions('');
       setWarranty('');
       setAssembly('');
-      
+      setFeaturesInput('');
+
       // Reset image previews
       setMainFile(null);
       setMainPreview('');
@@ -81,15 +85,19 @@ export default function AdminPage() {
     } else if (selectedProduct) {
       setProductName(selectedProduct.name);
       setProductDescription(selectedProduct.description);
+      setCategory(selectedProduct.category);
+      setSection(selectedProduct.section);
+      setIsHouseManufactured(selectedProduct.isHouseManufactured);
       setMaterial(selectedProduct.specifications?.material || '');
       setDimensions(selectedProduct.specifications?.dimensions || '');
       setWarranty(selectedProduct.specifications?.warranty || '');
       setAssembly(selectedProduct.specifications?.assembly || '');
-      
+      setFeaturesInput(selectedProduct.features?.join('\n') || '');
+
       // Load current product images
       setMainFile(null);
       setMainPreview(selectedProduct.image || '');
-      
+
       const imgs = selectedProduct.images || [];
       setGalleryFiles([null, null, null, null]);
       setGalleryPreviews([imgs[0] || '', imgs[1] || '', imgs[2] || '', imgs[3] || '']);
@@ -126,15 +134,15 @@ export default function AdminPage() {
   const handleGalleryFileChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      
+
       const newFiles = [...galleryFiles];
       newFiles[index] = selectedFile;
       setGalleryFiles(newFiles);
-      
+
       const newPreviews = [...galleryPreviews];
       newPreviews[index] = URL.createObjectURL(selectedFile);
       setGalleryPreviews(newPreviews);
-      
+
       setStatus({ type: null, message: '' });
     }
   };
@@ -143,7 +151,7 @@ export default function AdminPage() {
     const newFiles = [...galleryFiles];
     newFiles[index] = null;
     setGalleryFiles(newFiles);
-    
+
     const newPreviews = [...galleryPreviews];
     newPreviews[index] = '';
     setGalleryPreviews(newPreviews);
@@ -164,8 +172,8 @@ export default function AdminPage() {
 
     try {
       const activeId = isNewProduct ? newId : selectedProductId;
-      const activeSection = isNewProduct ? section : (selectedProduct?.section || 'home');
-      const activeCategory = isNewProduct ? category : (selectedProduct?.category || 'Bed');
+      const activeSection = section;
+      const activeCategory = category;
 
       let uploadedMainUrl = mainPreview;
 
@@ -236,10 +244,11 @@ export default function AdminPage() {
           warranty,
           assembly,
           isNewProduct,
-          category: isNewProduct ? category : undefined,
-          section: isNewProduct ? section : undefined,
+          category: category,
+          section: section,
           price: 0,
-          isHouseManufactured: isNewProduct ? isHouseManufactured : undefined
+          isHouseManufactured: isHouseManufactured,
+          features: featuresInput.split('\n').map(f => f.trim()).filter(Boolean)
         }),
       });
 
@@ -260,7 +269,7 @@ export default function AdminPage() {
           images: finalGalleryUrls.length > 0 ? finalGalleryUrls : [uploadedMainUrl],
           section: section,
           isHouseManufactured,
-          features: [],
+          features: featuresInput.split('\n').map(f => f.trim()).filter(Boolean),
           specifications: {
             material,
             dimensions,
@@ -279,10 +288,14 @@ export default function AdminPage() {
         setProducts(prevProducts =>
           prevProducts.map(p => {
             if (p.id === selectedProductId) {
-              return { 
-                ...p, 
-                name: productName, 
+              return {
+                ...p,
+                name: productName,
                 description: productDescription,
+                category: category as any,
+                section: section,
+                isHouseManufactured,
+                features: featuresInput.split('\n').map(f => f.trim()).filter(Boolean),
                 image: uploadedMainUrl,
                 images: finalGalleryUrls,
                 specifications: {
@@ -299,7 +312,7 @@ export default function AdminPage() {
         );
         setStatus({ type: 'success', message: 'Product specifications and images saved successfully!' });
       }
-      
+
       setMainFile(null);
       setGalleryFiles([null, null, null, null]);
     } catch (error: any) {
@@ -365,7 +378,7 @@ export default function AdminPage() {
             <p className="text-xs text-slate-500">Real Product Photo & Text Content Editor</p>
           </div>
         </div>
-        <Link 
+        <Link
           href={selectedProduct ? `/product/${selectedProduct.id}` : '/'}
           target="_blank"
           className="flex items-center gap-2 px-4 py-2 border border-slate-200 hover:border-slate-300 rounded-lg text-sm font-medium transition-colors bg-white shadow-2xs hover:bg-slate-50"
@@ -376,7 +389,7 @@ export default function AdminPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* Left Column - Action Form */}
         <section className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col gap-6">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -405,9 +418,8 @@ export default function AdminPage() {
                     key={space}
                     type="button"
                     onClick={() => setSpaceFilter(space as any)}
-                    className={`px-2 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer capitalize ${
-                      spaceFilter === space ? 'bg-white text-slate-800 shadow-3xs' : 'text-slate-500 hover:text-slate-800'
-                    }`}
+                    className={`px-2 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer capitalize ${spaceFilter === space ? 'bg-white text-slate-800 shadow-3xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
                   >
                     {space}
                   </button>
@@ -432,11 +444,11 @@ export default function AdminPage() {
             </select>
           </div>
 
-          {/* New Product Configurations */}
-          {isNewProduct && (
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-4 animate-fade-in">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Catalogue Configurations</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Catalogue Configurations */}
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Catalogue Configurations</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {isNewProduct && (
                 <div className="flex flex-col gap-1.5 col-span-1 md:col-span-3">
                   <label className="text-xs font-semibold text-slate-600">Product Slug ID</label>
                   <input
@@ -447,44 +459,44 @@ export default function AdminPage() {
                     className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden font-mono w-full"
                   />
                 </div>
+              )}
 
-                <div className="flex flex-col gap-1.5 md:col-span-1">
-                  <label className="text-xs font-semibold text-slate-600">Section Space</label>
-                  <select
-                    value={section}
-                    onChange={(e) => setSection(e.target.value as any)}
-                    className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
-                  >
-                    <option value="home">Home Spaces</option>
-                    <option value="office">Office Spaces</option>
-                  </select>
-                </div>
-                
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <label className="text-xs font-semibold text-slate-600">Category</label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
-                  >
-                    {(section === 'home' ? HOME_CATEGORIES : OFFICE_CATEGORIES).map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
+              <div className="flex flex-col gap-1.5 md:col-span-1">
+                <label className="text-xs font-semibold text-slate-600">Section Space</label>
+                <select
+                  value={section}
+                  onChange={(e) => setSection(e.target.value as any)}
+                  className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
+                >
+                  <option value="home">Home Spaces</option>
+                  <option value="office">Office Spaces</option>
+                </select>
               </div>
 
-              <label className="flex items-center gap-2 cursor-pointer mt-2 select-none">
-                <input
-                  type="checkbox"
-                  checked={isHouseManufactured}
-                  onChange={(e) => setIsHouseManufactured(e.target.checked)}
-                  className="rounded-sm border-slate-300 text-brand-red focus:ring-brand-red"
-                />
-                <span className="text-xs font-semibold text-slate-600">Is In-house Manufactured?</span>
-              </label>
+              <div className="flex flex-col gap-1.5 md:col-span-2">
+                <label className="text-xs font-semibold text-slate-600">Category</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-brand-red focus:bg-white focus:outline-hidden w-full"
+                >
+                  {(section === 'home' ? HOME_CATEGORIES : OFFICE_CATEGORIES).map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
             </div>
-          )}
+
+            <label className="flex items-center gap-2 cursor-pointer mt-2 select-none">
+              <input
+                type="checkbox"
+                checked={isHouseManufactured}
+                onChange={(e) => setIsHouseManufactured(e.target.checked)}
+                className="rounded-sm border-slate-300 text-brand-red focus:ring-brand-red"
+              />
+              <span className="text-xs font-semibold text-slate-600">Is In-house Manufactured?</span>
+            </label>
+          </div>
 
           {/* Editable Name Input */}
           <div className="flex flex-col gap-2">
@@ -514,13 +526,27 @@ export default function AdminPage() {
             />
           </div>
 
+          {/* Product Features Textarea */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Product Features (One per line)
+            </label>
+            <textarea
+              value={featuresInput}
+              onChange={(e) => setFeaturesInput(e.target.value)}
+              placeholder="e.g. Handcrafted in Imphal, Manipur&#10;100% seasoned solid teak wood&#10;Includes 5 years warranty"
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-brand-red focus:bg-white transition-all text-sm font-medium leading-relaxed resize-y"
+            />
+          </div>
+
           {/* Specifications Group */}
           <div className="border-t border-slate-100 pt-4 flex flex-col gap-4">
             <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
               <Settings className="w-4 h-4 text-slate-500" />
               Specifications
             </h3>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Material</label>
@@ -655,11 +681,10 @@ export default function AdminPage() {
 
           {/* Status Message */}
           {status.type && (
-            <div className={`p-4 rounded-xl border flex items-start gap-3 text-sm font-medium ${
-              status.type === 'success' 
-                ? 'bg-emerald-50 border-emerald-100 text-emerald-800' 
-                : 'bg-rose-50 border-rose-100 text-rose-800'
-            }`}>
+            <div className={`p-4 rounded-xl border flex items-start gap-3 text-sm font-medium ${status.type === 'success'
+              ? 'bg-emerald-50 border-emerald-100 text-emerald-800'
+              : 'bg-rose-50 border-rose-100 text-rose-800'
+              }`}>
               {status.type === 'success' ? (
                 <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               ) : (
@@ -676,11 +701,10 @@ export default function AdminPage() {
                 type="button"
                 disabled={saving}
                 onClick={() => setShowDeleteModal(true)}
-                className={`flex-1 py-4 rounded-xl font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2 ${
-                  saving
-                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
-                    : 'bg-rose-600 hover:bg-rose-700 text-white active:scale-98 cursor-pointer'
-                }`}
+                className={`flex-1 py-4 rounded-xl font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2 ${saving
+                  ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                  : 'bg-rose-600 hover:bg-rose-700 text-white active:scale-98 cursor-pointer'
+                  }`}
               >
                 <Trash2 className="w-5 h-5" />
                 Delete Product
@@ -755,8 +779,8 @@ export default function AdminPage() {
                 {galleryPreviews.some(u => u !== '') ? (
                   <div className="grid grid-cols-4 gap-3">
                     {galleryPreviews.map((img, idx) => img ? (
-                      <div 
-                        key={idx} 
+                      <div
+                        key={idx}
                         className="relative aspect-square rounded-lg overflow-hidden bg-slate-50 border border-slate-200"
                       >
                         <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
@@ -916,11 +940,11 @@ export default function AdminPage() {
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity animate-fade-in"
             onClick={() => setShowDeleteModal(false)}
           />
-          
+
           {/* Modal Container */}
           <div className="relative bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 flex flex-col gap-4 animate-scale-in z-10">
             <div className="flex items-start gap-4">
@@ -930,12 +954,12 @@ export default function AdminPage() {
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-slate-900">Delete Product</h3>
                 <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                  Are you sure you want to delete <strong className="text-slate-800">"{selectedProduct?.name}"</strong>? 
+                  Are you sure you want to delete <strong className="text-slate-800">"{selectedProduct?.name}"</strong>?
                   This action is permanent and will remove it from the database catalogue.
                 </p>
               </div>
             </div>
-            
+
             <div className="flex justify-end gap-3 mt-4 border-t border-slate-100 pt-4">
               <button
                 type="button"

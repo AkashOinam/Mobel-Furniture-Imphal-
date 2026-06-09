@@ -8,13 +8,13 @@ import Footer from "../../components/Footer";
 import ProductCard from "../../components/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  ChevronLeft, 
-  ShoppingCart, 
-  Star, 
-  Check, 
-  Truck, 
-  Shield, 
+import {
+  ChevronLeft,
+  ShoppingCart,
+  Star,
+  Check,
+  Truck,
+  Shield,
   Sparkles,
   ArrowRight
 } from "lucide-react";
@@ -45,18 +45,21 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
   // 2. Otherwise, start with product.image, then search for other products in the same category
   // 3. Keep unique images and limit to a premium gallery size of 4 images.
   const images = React.useMemo(() => {
-    if (product.images && product.images.length > 0) {
-      return product.images;
-    }
     const list = [product.image];
+    if (product.images && product.images.length > 0) {
+      // Filter out the main image if it exists in the gallery array to avoid duplicates
+      const uniqueGallery = product.images.filter(img => img !== product.image);
+      return [...list, ...uniqueGallery].slice(0, 4);
+    }
+
     // Find related products in the same category to use their images
     const fallbackList = relatedProducts
       .filter(p => p.id !== product.id && p.category === product.category)
       .map(p => p.image);
-    
+
     // Merge and deduplicate
     const combined = Array.from(new Set([...list, ...fallbackList]));
-    
+
     // If still less than 4, we can add some other general beautiful Unsplash furniture URLs
     if (combined.length < 4) {
       const fallbacks = [
@@ -72,7 +75,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
         if (combined.length >= 4) break;
       }
     }
-    
+
     return combined.slice(0, 4);
   }, [product, relatedProducts]);
 
@@ -97,7 +100,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
 
       <main className="flex-1 bg-white dark:bg-charcoal-900 py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
+
           {/* Breadcrumbs / Back button */}
           <div className="mb-8">
             <Link
@@ -110,7 +113,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
 
           {/* Main Product Panel */}
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start mb-20">
-            
+
             {/* Left Column: Image Gallery + Magnifier Hover */}
             <div className="flex flex-col-reverse md:flex-row gap-4">
               {/* Thumbnails */}
@@ -120,11 +123,10 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                     key={index}
                     onClick={() => setActiveIndex(index)}
                     onMouseEnter={() => setActiveIndex(index)}
-                    className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 bg-slate-50 dark:bg-zinc-900 transition-all flex-shrink-0 ${
-                      activeIndex === index
-                        ? "border-brand-red ring-2 ring-brand-red/25 scale-[1.03]"
-                        : "border-slate-100 dark:border-zinc-850 hover:border-slate-300 dark:hover:border-zinc-700"
-                    }`}
+                    className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 bg-slate-50 dark:bg-zinc-900 transition-all flex-shrink-0 ${activeIndex === index
+                      ? "border-brand-red ring-2 ring-brand-red/25 scale-[1.03]"
+                      : "border-slate-100 dark:border-zinc-850 hover:border-slate-300 dark:hover:border-zinc-700"
+                      }`}
                   >
                     <Image
                       src={img}
@@ -139,7 +141,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
 
               {/* Main Image Container */}
               <div className="flex-1 space-y-4">
-                <div 
+                <div
                   className="relative aspect-square w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 cursor-zoom-in"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
@@ -151,9 +153,8 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className={`object-cover transition-transform duration-100 ${
-                      isHovered ? "scale-150" : "scale-100"
-                    }`}
+                    className={`object-cover transition-transform duration-100 ${isHovered ? "scale-150" : "scale-100"
+                      }`}
                     style={
                       isHovered
                         ? { transformOrigin: `${hoverPosition.x}% ${hoverPosition.y}%` }
@@ -176,18 +177,17 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                 <h1 className="font-serif text-3xl font-bold tracking-tight text-slate-900 dark:text-zinc-50 sm:text-4xl">
                   {product.name}
                 </h1>
-                
+
                 {/* Rating */}
                 <div className="flex items-center gap-4 mt-2">
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`h-4 w-4 ${
-                          i < Math.floor(product.rating) 
-                            ? "fill-amber-400 text-amber-400" 
-                            : "text-slate-200 dark:text-zinc-700"
-                        }`} 
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 ${i < Math.floor(product.rating)
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-slate-200 dark:text-zinc-700"
+                          }`}
                       />
                     ))}
                     <span className="text-sm font-semibold text-slate-700 dark:text-zinc-300 ml-1.5">
@@ -219,15 +219,14 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
               {/* Add to Cart Actions */}
               <div className="space-y-4 pt-4">
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
-                  
+
                   {/* Add to Cart Button */}
                   <button
                     onClick={handleAddToCart}
-                    className={`flex-1 w-full flex items-center justify-center rounded-full py-3.5 px-8 text-sm font-semibold text-white shadow-xs transition-all duration-300 ${
-                      isAdded 
-                        ? "bg-emerald-500 hover:bg-emerald-600" 
-                        : "bg-brand-red hover:bg-brand-red-hover"
-                    }`}
+                    className={`flex-1 w-full flex items-center justify-center rounded-full py-3.5 px-8 text-sm font-semibold text-white shadow-xs transition-all duration-300 ${isAdded
+                      ? "bg-emerald-500 hover:bg-emerald-600"
+                      : "bg-brand-red hover:bg-brand-red-hover"
+                      }`}
                   >
                     {isAdded ? (
                       <>
@@ -252,11 +251,10 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`pb-3 text-sm font-semibold tracking-wide capitalize border-b-2 transition-all ${
-                        activeTab === tab
-                          ? "border-brand-red text-brand-red"
-                          : "border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200"
-                      }`}
+                      className={`pb-3 text-sm font-semibold tracking-wide capitalize border-b-2 transition-all ${activeTab === tab
+                        ? "border-brand-red text-brand-red"
+                        : "border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200"
+                        }`}
                     >
                       {tab}
                     </button>

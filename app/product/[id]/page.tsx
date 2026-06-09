@@ -10,7 +10,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const product = products.find((p) => p.id === id);
-  
+
   if (!product) {
     return {
       title: "Product Not Found | Möbel Furniture Imphal",
@@ -46,9 +46,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .slice(0, 4);
 
   return (
-    <ProductDetailClient 
-      product={product} 
-      relatedProducts={relatedProducts} 
+    <ProductDetailClient
+      product={product}
+      relatedProducts={relatedProducts}
     />
   );
 }
