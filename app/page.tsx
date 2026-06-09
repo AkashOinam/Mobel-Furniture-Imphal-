@@ -175,7 +175,7 @@ function HomePageContent() {
             <div className="space-y-8 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/20 bg-brand-red/5 px-4 py-1.5 text-xs font-semibold text-brand-red">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-red animate-pulse"></span>
-                Handcrafted Elegance • Delivered Across Manipur
+                Delivered Across Manipur
               </div>
 
               <h1 className="font-serif text-4xl font-bold tracking-tight text-slate-900 dark:text-zinc-50 sm:text-5xl md:text-6xl leading-[1.1]">
