@@ -7,10 +7,10 @@ export default function Footer() {
   return (
     <footer className="bg-white text-slate-600 border-t border-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-slate-100">
 
           {/* Column 1: Brand & Contact Info */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:pr-8">
             <Link href="/" className="flex items-center">
               <Image
                 src="/logo-v2.svg"
@@ -21,7 +21,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed">
-              Premium home and office furniture in Imphal, Manipur. Retail partner for Möbel Furniture Kolkata, bringing luxury, high-quality, factory-crafted furniture direct to Imphal.
+              Crafting elegant living and working spaces with premium furniture that blends style, comfort, and durability for every lifestyle.
             </p>
             <div className="space-y-3.5 text-sm">
               <div className="flex items-start gap-3">
@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Home Furniture Categories */}
-          <div>
+          <div className="lg:pl-8 lg:pr-8">
             <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase mb-6">Home Furniture</h3>
             <ul className="space-y-3.5 text-sm">
               <li>
@@ -65,7 +65,7 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Office & Service Info */}
-          <div>
+          <div className="lg:pl-8 lg:pr-8">
             <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase mb-6">Office & Services</h3>
             <ul className="space-y-3.5 text-sm">
               <li>
@@ -81,7 +81,7 @@ export default function Footer() {
           </div>
 
           {/* Column 4: Opening Hours & Social Media */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:pl-8">
             <div>
               <h3 className="text-sm font-semibold tracking-wider text-slate-900 uppercase mb-4 flex items-center gap-2">
                 <Clock className="h-4 w-4 text-brand-red" />
@@ -93,13 +93,13 @@ export default function Footer() {
 
             {/* Social Media */}
             <div className="flex gap-4 pt-2">
-              <a href="https://www.facebook.com/MobelFurnitureImphal" className="text-slate-900 hover:text-brand-red transition-colors" aria-label="Facebook">
+              <a href="https://www.facebook.com/MobelFurnitureImphal" className="text-brand-red hover:text-brand-red-hover transition-colors" aria-label="Facebook">
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
               </a>
-              <a href="https://www.instagram.com/mobelfurnitureimphal/" className="text-slate-900 hover:text-brand-red transition-colors" aria-label="Instagram">
+              <a href="https://www.instagram.com/mobelfurnitureimphal/" className="text-brand-red hover:text-brand-red-hover transition-colors" aria-label="Instagram">
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
               </a>
-              <a href="https://www.linkedin.com" className="text-slate-900 hover:text-brand-red transition-colors" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.linkedin.com" className="text-brand-red hover:text-brand-red-hover transition-colors" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
               </a>
             </div>
