@@ -10,6 +10,12 @@ cloudinary.config({
 
 export async function POST(request: Request) {
   try {
+    const authHeader = request.headers.get('Authorization');
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    if (!authHeader || authHeader !== adminPassword) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const productId = formData.get('productId') as string;

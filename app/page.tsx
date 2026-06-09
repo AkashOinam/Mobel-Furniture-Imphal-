@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProductCard from "./components/ProductCard";
 import ProductCardSkeleton from "./components/ProductCardSkeleton";
-import { products } from "./data/products";
+import { products as fallbackProducts, Product } from "./data/products";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -26,11 +26,28 @@ import {
 function HomePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [products, setProducts] = useState<Product[]>(fallbackProducts);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch updated products from database/API on mount
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+          const data = await res.json();
+          setProducts(data);
+        }
+      } catch (err) {
+        console.error("Failed to load products from API:", err);
+      }
+    }
+    loadProducts();
+  }, []);
 
   // Reset scroll to top on page reload/mount
   useEffect(() => {

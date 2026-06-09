@@ -1,4 +1,4 @@
-import { products } from "../../data/products";
+import { getProducts, getProductById } from "../../lib/db";
 import ProductDetailClient from "./ProductDetailClient";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -9,8 +9,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const product = products.find((p) => p.id === id);
-
+  const product = await getProductById(id);
+  
   if (!product) {
     return {
       title: "Product Not Found | Möbel Furniture Imphal",
@@ -30,14 +30,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const product = products.find((p) => p.id === id);
+  const product = await getProductById(id);
 
   if (!product) {
     notFound();
   }
 
-  // Get up to 4 related products (same category or same section, excluding current product)
-  const relatedProducts = products
+  // Get related products from DB
+  const allProducts = await getProducts();
+  const relatedProducts = allProducts
     .filter(
       (p) =>
         (p.category === product.category || p.section === product.section) &&
@@ -46,16 +47,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .slice(0, 4);
 
   return (
-    <ProductDetailClient
-      product={product}
-      relatedProducts={relatedProducts}
+    <ProductDetailClient 
+      product={product} 
+      relatedProducts={relatedProducts} 
     />
   );
 }
 
-// Generate static paths for Next.js to pre-render the pages at build time
-export async function generateStaticParams() {
-  return products.map((product) => ({
-    id: product.id,
-  }));
-}
+export const dynamic = 'force-dynamic';

@@ -15,8 +15,67 @@ const OFFICE_CATEGORIES = [
 ];
 
 export default function AdminPage() {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [selectedProductId, setSelectedProductId] = useState<string>(initialProducts[0]?.id || 'new');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<string>('new');
+
+  // Auth states
+  const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [authenticating, setAuthenticating] = useState(false);
+  const [checkingSavedSession, setCheckingSavedSession] = useState(true);
+
+  // Load products data helper
+  async function loadProductsData() {
+    try {
+      const res = await fetch("/api/products");
+      if (res.ok) {
+        const data = await res.json();
+        setProducts(data);
+        if (data.length > 0) {
+          setSelectedProductId(data[0].id);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load products:", err);
+    }
+  }
+
+  // Verify submitted password
+  async function verifyPassword(pwd: string, auto = false) {
+    if (!auto) setAuthenticating(true);
+    setAuthError('');
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd })
+      });
+      if (res.ok) {
+        sessionStorage.setItem('admin_session_key', pwd);
+        setIsLoggedIn(true);
+        loadProductsData();
+      } else {
+        if (!auto) setAuthError('Incorrect password. Please try again.');
+        sessionStorage.removeItem('admin_session_key');
+      }
+    } catch (err) {
+      if (!auto) setAuthError('Authentication failed. Connection error.');
+    } finally {
+      setAuthenticating(false);
+      setCheckingSavedSession(false);
+    }
+  }
+
+  // Check saved session on mount
+  useEffect(() => {
+    const savedPassword = sessionStorage.getItem('admin_session_key');
+    if (savedPassword) {
+      verifyPassword(savedPassword, true);
+    } else {
+      setCheckingSavedSession(false);
+    }
+  }, []);
 
   // Section filter for the product selector list
   const [spaceFilter, setSpaceFilter] = useState<'all' | 'home' | 'office'>('all');
@@ -187,6 +246,9 @@ export default function AdminPage() {
 
         const uploadRes = await fetch('/api/admin/upload', {
           method: 'POST',
+          headers: {
+            'Authorization': sessionStorage.getItem('admin_session_key') || ''
+          },
           body: formData,
         });
 
@@ -209,8 +271,11 @@ export default function AdminPage() {
           formData.append('section', activeSection);
           formData.append('category', activeCategory);
 
-          const uploadRes = await fetch('/api/admin/upload', {
+           const uploadRes = await fetch('/api/admin/upload', {
             method: 'POST',
+            headers: {
+              'Authorization': sessionStorage.getItem('admin_session_key') || ''
+            },
             body: formData,
           });
 
@@ -232,6 +297,7 @@ export default function AdminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('admin_session_key') || ''
         },
         body: JSON.stringify({
           productId: activeId,
@@ -333,6 +399,7 @@ export default function AdminPage() {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('admin_session_key') || ''
         },
         body: JSON.stringify({ productId: selectedProductId }),
       });
@@ -361,6 +428,59 @@ export default function AdminPage() {
       setSaving(false);
     }
   };
+
+  if (checkingSavedSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-900">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-red"></div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-4 relative overflow-hidden">
+        {/* Decorative background glows */}
+        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-brand-red/10 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+        
+        <div className="w-full max-w-md bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md shadow-2xl flex flex-col gap-6 animate-scale-in">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+              <Sparkles className="w-6 h-6 text-brand-red animate-pulse" />
+              Möbel Imphal Portal
+            </h1>
+            <p className="text-xs text-slate-400">Enter your administrator password to proceed</p>
+          </div>
+
+          <form onSubmit={(e) => { e.preventDefault(); verifyPassword(password); }} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-hidden focus:ring-2 focus:ring-brand-red transition-all text-center text-sm tracking-widest font-mono"
+              />
+            </div>
+
+            {authError && (
+              <p className="text-xs text-rose-400 text-center font-medium">{authError}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={authenticating}
+              className="w-full py-3.5 rounded-xl bg-brand-red hover:bg-brand-red-hover text-white text-sm font-semibold tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-red/10"
+            >
+              {authenticating ? 'Verifying...' : 'LOG IN'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-12">
