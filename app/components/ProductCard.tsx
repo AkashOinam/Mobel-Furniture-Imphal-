@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
-import { ShoppingCart, Star, Check } from "lucide-react";
+import { ShoppingCart, Check } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -34,13 +34,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
         />
-        
-
-        {/* Quick Review Badge */}
-        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1 rounded-md bg-white/90 dark:bg-charcoal-900/90 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:text-zinc-200 shadow-xs backdrop-blur-xs z-10">
-          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-          <span>{product.rating}</span>
-        </div>
       </Link>
 
       {/* Product Info */}
