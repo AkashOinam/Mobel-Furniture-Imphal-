@@ -26,7 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-100 bg-white dark:border-zinc-800 dark:bg-charcoal-800 transition-all duration-300 hover:shadow-lg hover:border-slate-200 dark:hover:border-zinc-700">
       
       {/* Product Image & Badges */}
-      <Link href={`/product/${product.id}`} className="relative block aspect-square w-full overflow-hidden bg-slate-50 dark:bg-zinc-900">
+      <Link href={`/product/${product.id}`} className="relative block aspect-square w-full overflow-hidden bg-slate-50 dark:bg-zinc-900 border-b border-slate-100 dark:border-zinc-800/80">
         <Image
           src={product.image}
           alt={product.name}
