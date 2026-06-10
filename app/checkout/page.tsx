@@ -191,7 +191,7 @@ export default function CheckoutPage() {
                 Request Submitted!
               </h1>
               <p className="text-sm text-slate-500 dark:text-zinc-400 max-w-sm mx-auto">
-                Thank you for your quotation request with Möbel Furniture Imphal. Our team will review your selected items and compile a custom quote.
+                Thank you for your quotation request with Stupendous Interior. Our team will review your selected items and compile a custom quote.
               </p>
             </div>
 
@@ -210,7 +210,7 @@ export default function CheckoutPage() {
                 <span className="text-slate-400 font-medium">Estimated Review Time</span>
                 <span className="font-semibold text-brand-red flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" /> 
-                  Within 12 Hours
+                  Within 6 Hours
                 </span>
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
             <div className="rounded-xl border border-brand-red/10 bg-brand-red/5 p-4 text-xs text-left max-w-md mx-auto flex items-start gap-2">
               <ShieldCheck className="h-5 w-5 text-brand-red flex-shrink-0 mt-0.5" />
               <p className="text-slate-600 dark:text-zinc-400 leading-relaxed">
-                <strong>Next Step:</strong> Our Imphal showroom manager will contact you at <strong>+91 {form.phone}</strong> via phone call or WhatsApp to provide the customized pricing catalog and discuss delivery/assembly options.
+                <strong>Next Step:</strong> Our sales executive team will contact you shortly within 6 hrs.
               </p>
             </div>
 
