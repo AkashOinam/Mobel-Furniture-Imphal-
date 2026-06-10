@@ -250,7 +250,7 @@ export default function PrivacyPolicyPage() {
                 <p><strong>Stupendous Interior</strong></p>
                 <p>Kwakeithel Ningthemkol Near Maruti Suzuki Arena,</p>
                 <p>Imphal West, Manipur, India - 795001</p>
-                <p><strong>Email:</strong> <a href="mailto:info@mobelimphal.com" className="text-brand-red hover:underline">info@mobelimphal.com</a></p>
+                <p><strong>Email:</strong> <a href="mailto:info@stupendousinteriors.com" className="text-brand-red hover:underline">info@stupendousinteriors.com</a></p>
                 <p><strong>Phone:</strong> <a href="tel:+916009905233" className="text-brand-red hover:underline">+91 6009905233</a></p>
               </div>
             </section>

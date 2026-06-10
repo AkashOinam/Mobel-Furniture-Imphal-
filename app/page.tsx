@@ -523,7 +523,7 @@ function HomePageContent() {
                     <h4 className="text-sm font-bold text-slate-900 dark:text-zinc-100">Contact Details</h4>
                     <p className="text-sm text-slate-500 dark:text-zinc-455 mt-1 leading-relaxed">
                       Mobile: <a href="tel:+916009905233" className="hover:text-brand-red transition-colors">+91 6009905233</a> <br />
-                      Email: <a href="mailto:info@mobelimphal.com" className="hover:text-brand-red transition-colors">info@mobelimphal.com</a>
+                      Email: <a href="mailto:info@stupendousinteriors.com" className="hover:text-brand-red transition-colors">info@stupendousinteriors.com</a>
                     </p>
                   </div>
                 </div>
