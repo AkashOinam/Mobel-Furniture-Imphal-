@@ -95,7 +95,7 @@ function HomePageContent() {
   const closePopup = (followed = false) => {
     setShowPopup(false);
     localStorage.setItem("mobel_promo_popup_closed", "true");
-    
+
     if (followed) {
       localStorage.setItem("mobel_promo_notification_dismissed", "true");
       setShowNotification(false);
@@ -523,7 +523,6 @@ function HomePageContent() {
                     <h4 className="text-sm font-bold text-slate-900 dark:text-zinc-100">Contact Details</h4>
                     <p className="text-sm text-slate-500 dark:text-zinc-455 mt-1 leading-relaxed">
                       Mobile: <a href="tel:+916009905233" className="hover:text-brand-red transition-colors">+91 6009905233</a> <br />
-                      Office: <a href="tel:03852445678" className="hover:text-brand-red transition-colors">0385-2445678</a> <br />
                       Email: <a href="mailto:info@mobelimphal.com" className="hover:text-brand-red transition-colors">info@mobelimphal.com</a>
                     </p>
                   </div>
@@ -548,7 +547,7 @@ function HomePageContent() {
                 allowFullScreen
                 loading="lazy"
               />
-              
+
               {/* Floating Card overlay */}
               <div className="absolute bottom-4 left-4 right-4 bg-white/95 dark:bg-charcoal-900/95 p-4 rounded-xl border border-slate-150 dark:border-zinc-850 shadow-lg backdrop-blur-xs text-center space-y-3 z-10 max-w-sm mx-auto">
                 <div>
