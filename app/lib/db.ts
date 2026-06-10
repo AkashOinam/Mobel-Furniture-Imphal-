@@ -103,6 +103,7 @@ export async function initDatabase() {
   
   try {
     await runQuery(async (client) => {
+      // 1. Create table if it doesn't exist
       await client.sql`
         CREATE TABLE IF NOT EXISTS products (
           id VARCHAR(255) PRIMARY KEY,
@@ -120,6 +121,40 @@ export async function initDatabase() {
           reviews_count INT DEFAULT 0
         );
       `;
+
+      // 2. Seed table with local fallback products if empty
+      const { rows } = await client.sql`SELECT COUNT(*) as count FROM products;`;
+      const count = Number(rows[0].count);
+      if (count === 0 && fallbackProducts.length > 0) {
+        console.log('Database table "products" is empty. Seeding fallback products...');
+        for (const p of fallbackProducts) {
+          const imagesJson = JSON.stringify(p.images || []);
+          const featuresJson = JSON.stringify(p.features || []);
+          const specsJson = JSON.stringify(p.specifications);
+
+          await client.sql`
+            INSERT INTO products (
+              id, name, category, price, description, image, images, section, is_house_manufactured, features, specifications, rating, reviews_count
+            ) VALUES (
+              ${p.id}, 
+              ${p.name}, 
+              ${p.category}, 
+              ${p.price}, 
+              ${p.description}, 
+              ${p.image}, 
+              ${imagesJson}, 
+              ${p.section}, 
+              ${p.isHouseManufactured}, 
+              ${featuresJson}, 
+              ${specsJson}, 
+              ${p.rating}, 
+              ${p.reviewsCount}
+            )
+            ON CONFLICT (id) DO NOTHING;
+          `;
+        }
+        console.log('Database successfully seeded!');
+      }
     });
   } catch (error) {
     console.error('Failed to initialize database table:', error);
