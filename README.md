@@ -127,4 +127,4 @@ npm run start
 
 ## 📝 License
 
-This project is configured for private use. All rights reserved by **Möbel Furniture Imphal**.
+This project is configured for private use. All rights reserved by **Oinam Akash Khuman**.
