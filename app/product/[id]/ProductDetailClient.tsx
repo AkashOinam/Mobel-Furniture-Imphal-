@@ -309,10 +309,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
                         <div>
                           <h4 className="font-semibold text-slate-900 dark:text-zinc-150">Manipur Local Delivery</h4>
                           <p className="mt-1 leading-relaxed">
-                            <strong>Free Delivery & Installation:</strong> Within Imphal East, Imphal West, and Sagolband areas. Setup completed in 24-48 hours.
-                          </p>
-                          <p className="mt-1 leading-relaxed">
-                            <strong>Outer Districts (Thoubal, Bishnupur, Churachandpur, Kakching, etc.):</strong> Deliveries scheduled weekly. A flat shipping charge applies based on distance, calculated on the checkout page.
+                            Delivery price differs according to the distance.
                           </p>
                         </div>
                       </div>
