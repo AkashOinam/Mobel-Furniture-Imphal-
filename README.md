@@ -7,11 +7,13 @@ A modern, high-performance, and visually stunning e-commerce platform designed a
 ## ✨ Key Features
 
 - **🛍️ Extensive Product Catalog**: Browse curated furniture categories with high-quality images, detailed descriptions, dimensions, and materials.
-- **🔍 Advanced Filtering & Sorting**: Easily filter furniture by category, price ranges, and sort by popularity, rating, or price.
+- **🔍 Advanced Filtering & Sorting**: Easily filter furniture by category, price ranges, and search keywords.
 - **🛒 Dynamic Shopping Cart**: Seamlessly add, remove, adjust quantities, and preview order summaries in real-time.
 - **💳 Structured Checkout Process**: Step-by-step checkout page collecting contact, delivery, and payment information.
-- **📱 Fully Responsive Premium UI**: Immersive shopping experience with clean glassmorphism accents, smooth micro-interactions, and beautiful transitions powered by Tailwind CSS 4.
-- **⚡ Next.js 16 & React 19 Powered**: Built with the latest React Server Components architecture for exceptional speed and SEO performance.
+- **🔐 Furniture Manager Admin Portal**: Secure portal at `/furniture-manager` for administrators to add, edit, and delete catalog products.
+- **🖼️ Cloudinary Asset Integration**: Automatic compression and hosting of product images uploaded through the admin panel.
+- **🗃️ PostgreSQL Database Support**: Dynamic CRUD operations backed by a remote PostgreSQL database (compatible with Prisma Postgres and Vercel Postgres) with automatic schema initialization and seeding.
+- **📱 Fully Responsive Premium UI**: Immersive shopping experience with clean glassmorphism accents, smooth micro-interactions, and beautiful transitions.
 
 ---
 
@@ -20,6 +22,9 @@ A modern, high-performance, and visually stunning e-commerce platform designed a
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
 - **Library**: [React 19](https://react.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Database**: PostgreSQL (Prisma Postgres / Vercel Postgres)
+- **Database Driver**: [node-postgres (`pg`)](https://node-postgres.com/)
+- **Image Storage**: [Cloudinary](https://cloudinary.com/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 
@@ -30,11 +35,13 @@ A modern, high-performance, and visually stunning e-commerce platform designed a
 ```text
 mobel-furniture/
 ├── app/                  # Next.js App Router root
-│   ├── api/              # API Route Handlers
+│   ├── api/              # API Route Handlers (Uploads, Auth, Product CRUD)
 │   ├── checkout/         # Checkout flow page
 │   ├── components/       # Reusable UI components (Navbar, Footer, Product Cards)
-│   ├── context/          # React Context (e.g. Shopping Cart state)
-│   ├── data/             # Static product data and mocks
+│   ├── context/          # React Context (Shopping Cart state)
+│   ├── data/             # Static product fallback data and types
+│   ├── furniture-manager/# Admin portal page
+│   ├── lib/              # Library configurations and DB handlers
 │   ├── product/          # Dynamic product details ([id] route)
 │   ├── globals.css       # Core Tailwind CSS directives and custom styles
 │   ├── layout.tsx        # Root HTML shell & metadata
@@ -42,6 +49,28 @@ mobel-furniture/
 ├── public/               # Static assets (images, logo, icons)
 ├── package.json          # Dependency and script definitions
 └── tsconfig.json         # TypeScript configuration
+```
+
+---
+
+## 🔑 Environment Variables Configuration
+
+Create a `.env.local` file in the root directory and configure the following variables:
+
+```env
+# Google Sheets Integration
+GOOGLE_SHEET_WEBAPP_URL=your_google_sheet_webhook_url
+
+# Cloudinary Credentials
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# Database Settings (Prisma Postgres / Vercel Postgres)
+POSTGRES_URL=your_postgresql_connection_string
+
+# Admin Authentication
+ADMIN_PASSWORD=your_admin_portal_password
 ```
 
 ---
@@ -67,8 +96,8 @@ Ensure you have **Node.js** (v18.x or later) and **npm** installed on your syste
    npm install
    ```
 
-3. **Set up local environment variables (if any):**
-   Create a `.env.local` file in the root directory and add any necessary configurations.
+3. **Configure the environment:**
+   Set up your `.env.local` file using the keys detailed in the **Environment Variables** section.
 
 4. **Run the development server:**
    ```bash
