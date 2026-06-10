@@ -7,7 +7,10 @@ const isDbMode = () => !!(process.env.POSTGRES_URL || process.env.POSTGRES_URL_N
 
 // Helper to run query with a temporary client connection (compatible with pooled & direct connection strings)
 async function runQuery<T>(callback: (client: any) => Promise<T>): Promise<T> {
-  const connectionString = process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
+  let connectionString = process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
+  if (connectionString) {
+    connectionString = connectionString.trim().replace(/^["']|["']$/g, '');
+  }
   const client = createClient({ connectionString });
   await client.connect();
   try {
