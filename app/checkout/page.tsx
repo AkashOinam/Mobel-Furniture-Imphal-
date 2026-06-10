@@ -88,7 +88,7 @@ export default function CheckoutPage() {
       const payload = {
         orderId: generatedOrderId,
         name: form.name,
-        phone: "+91 " + form.phone,
+        phone: form.phone,
         email: form.email,
         district: form.district,
         address: form.address,
