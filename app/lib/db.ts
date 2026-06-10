@@ -3,11 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { Product, products as fallbackProducts } from '../data/products';
 
-const isDbMode = () => !!process.env.POSTGRES_URL;
+const isDbMode = () => !!(process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING);
 
 // Helper to run query with a temporary client connection (compatible with pooled & direct connection strings)
 async function runQuery<T>(callback: (client: any) => Promise<T>): Promise<T> {
-  const client = createClient();
+  const connectionString = process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
+  const client = createClient({ connectionString });
   await client.connect();
   try {
     return await callback(client);
