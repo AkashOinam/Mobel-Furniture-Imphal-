@@ -135,7 +135,7 @@ function HomePageContent() {
   const categories = useMemo(() => {
     const allCats = products.map((p) => p.category);
     return ["All", ...Array.from(new Set(allCats))];
-  }, []);
+  }, [products]);
 
   // Filter products by category and search query
   const filteredProducts = useMemo(() => {
@@ -148,16 +148,16 @@ function HomePageContent() {
         product.description.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, products]);
 
   // Separate office and home featured products
   const officeProducts = useMemo(() => {
     return products.filter((p) => p.section === "office").slice(0, 4);
-  }, []);
+  }, [products]);
 
   const homeProducts = useMemo(() => {
     return products.filter((p) => p.section === "home").slice(0, 4);
-  }, []);
+  }, [products]);
 
   return (
     <div className="flex flex-col min-h-screen">
