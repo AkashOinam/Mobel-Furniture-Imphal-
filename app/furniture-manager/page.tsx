@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { products as initialProducts, Product } from '@/app/data/products';
 import { Upload, ArrowLeft, Image as ImageIcon, Sparkles, CheckCircle, AlertCircle, Eye, Save, Settings, PlusCircle, Trash2, Filter, X, Plus, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const HOME_CATEGORIES = [
   'Bed', 'Sofa', 'Wardrobe', 'Showcase', 'Center Table', 'Dresser',
@@ -15,6 +16,7 @@ const OFFICE_CATEGORIES = [
 ];
 
 export default function AdminPage() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string>('new');
 
@@ -491,6 +493,7 @@ export default function AdminPage() {
             onClick={() => {
               setIsLoggedIn(false);
               setPassword('');
+              router.push('/');
             }}
             className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer"
           >
