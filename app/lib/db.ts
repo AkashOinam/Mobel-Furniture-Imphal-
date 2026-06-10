@@ -103,7 +103,17 @@ export async function initDatabase() {
   
   try {
     await runQuery(async (client) => {
-      // 1. Create table if it doesn't exist
+      // 1. Check if the table already exists before creating it
+      const checkTableRes = await client.sql`
+        SELECT EXISTS (
+          SELECT FROM pg_tables 
+          WHERE schemaname = 'public' 
+          AND tablename = 'products'
+        );
+      `;
+      const tableExists = checkTableRes.rows[0].exists;
+
+      // 2. Create table if it doesn't exist
       await client.sql`
         CREATE TABLE IF NOT EXISTS products (
           id VARCHAR(255) PRIMARY KEY,
@@ -122,11 +132,9 @@ export async function initDatabase() {
         );
       `;
 
-      // 2. Seed table with local fallback products if empty
-      const { rows } = await client.sql`SELECT COUNT(*) as count FROM products;`;
-      const count = Number(rows[0].count);
-      if (count === 0 && fallbackProducts.length > 0) {
-        console.log('Database table "products" is empty. Seeding fallback products...');
+      // 3. Seed table ONLY if it's the very first time creation (table didn't exist)
+      if (!tableExists && fallbackProducts.length > 0) {
+        console.log('Database table "products" was just created. Seeding fallback products...');
         for (const p of fallbackProducts) {
           const imagesJson = JSON.stringify(p.images || []);
           const featuresJson = JSON.stringify(p.features || []);
