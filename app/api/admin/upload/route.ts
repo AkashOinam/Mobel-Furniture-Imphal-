@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 
+const clean = (val?: string) => val?.trim().replace(/^["']|["']$/g, '') || '';
+
+const cloudName = clean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+const apiKey = clean(process.env.CLOUDINARY_API_KEY);
+const apiSecret = clean(process.env.CLOUDINARY_API_SECRET);
+
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: cloudName,
+  api_key: apiKey,
+  api_secret: apiSecret,
 });
 
 export async function POST(request: Request) {
@@ -17,7 +23,7 @@ export async function POST(request: Request) {
     }
 
     // Check if Cloudinary credentials are set
-    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    if (!cloudName || !apiKey || !apiSecret) {
       return NextResponse.json({ 
         error: 'Cloudinary environment variables are missing on Vercel. Please add them in Vercel settings and Redeploy.' 
       }, { status: 500 });
