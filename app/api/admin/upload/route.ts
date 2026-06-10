@@ -52,21 +52,12 @@ export async function POST(request: Request) {
       ? `mobel-furniture-products/${sectionFolder}/${categoryFolder}/${productId}`
       : `mobel-furniture-products/${sectionFolder}/${categoryFolder}`;
 
-    // Upload to Cloudinary using a stream
-    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: targetFolder,
-        },
-        (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result as { secure_url: string });
-          }
-        }
-      );
-      uploadStream.end(buffer);
+    // Convert buffer to base64 data URL
+    const base64Data = `data:${file.type};base64,${buffer.toString('base64')}`;
+
+    // Upload to Cloudinary using base64
+    const result = await cloudinary.uploader.upload(base64Data, {
+      folder: targetFolder,
     });
 
     return NextResponse.json({ url: result.secure_url });
