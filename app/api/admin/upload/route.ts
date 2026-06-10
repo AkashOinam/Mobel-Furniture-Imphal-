@@ -16,6 +16,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check if Cloudinary credentials are set
+    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return NextResponse.json({ 
+        error: 'Cloudinary environment variables are missing on Vercel. Please add them in Vercel settings and Redeploy.' 
+      }, { status: 500 });
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const productId = formData.get('productId') as string;
