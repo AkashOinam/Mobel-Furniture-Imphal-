@@ -7,7 +7,7 @@ const isDbMode = () => !!process.env.POSTGRES_URL;
 
 // Helper to write changes to local products.ts for local development fallback
 function writeLocalProductsFile(productsList: Product[]) {
-  const filePath = path.join(process.cwd(), 'app', 'data', 'products', '../../app/data/products.ts');
+  const filePath = path.join(process.cwd(), 'app', 'data', 'products.ts');
   const cleanPath = path.resolve(filePath);
   const fileContent = `export interface Product {
   id: string;
