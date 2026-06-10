@@ -1,6 +1,6 @@
-# 🪑 Möbel Furniture Imphal — Premium E-Commerce Website
+# 🪑 Stupendous Interior — Premium E-Commerce Website
 
-A modern, high-performance, and visually stunning e-commerce platform designed and built for **Möbel Furniture Imphal**, the premier furniture destination in Manipur. This application showcases premium furniture items including sofas, luxury dining sets, bedroom packages, storage solutions, office setups, and home decor, providing a seamless browsing and shopping experience.
+A modern, high-performance, and visually stunning e-commerce platform designed and built for **Stupendous Interior**, the premier furniture destination in Manipur. This application showcases premium furniture items including sofas, luxury dining sets, bedroom packages, storage solutions, office setups, and home decor, providing a seamless browsing and shopping experience.
 
 ---
 
