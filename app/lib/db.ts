@@ -1,9 +1,24 @@
-import { sql } from '@vercel/postgres';
+import { createClient } from '@vercel/postgres';
 import fs from 'fs';
 import path from 'path';
 import { Product, products as fallbackProducts } from '../data/products';
 
 const isDbMode = () => !!process.env.POSTGRES_URL;
+
+// Helper to run query with a temporary client connection (compatible with pooled & direct connection strings)
+async function runQuery<T>(callback: (client: any) => Promise<T>): Promise<T> {
+  const client = createClient();
+  await client.connect();
+  try {
+    return await callback(client);
+  } finally {
+    try {
+      await client.end();
+    } catch (err) {
+      console.error('Failed to close client:', err);
+    }
+  }
+}
 
 // Helper to write changes to local products.ts for local development fallback
 function writeLocalProductsFile(productsList: Product[]) {
@@ -64,23 +79,25 @@ export async function initDatabase() {
   if (!isDbMode()) return;
   
   try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS products (
-        id VARCHAR(255) PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        category VARCHAR(255) NOT NULL,
-        price NUMERIC NOT NULL DEFAULT 0,
-        description TEXT,
-        image TEXT,
-        images JSONB,
-        section VARCHAR(255),
-        is_house_manufactured BOOLEAN,
-        features JSONB,
-        specifications JSONB,
-        rating NUMERIC DEFAULT 5.0,
-        reviews_count INT DEFAULT 0
-      );
-    `;
+    await runQuery(async (client) => {
+      await client.sql`
+        CREATE TABLE IF NOT EXISTS products (
+          id VARCHAR(255) PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          category VARCHAR(255) NOT NULL,
+          price NUMERIC NOT NULL DEFAULT 0,
+          description TEXT,
+          image TEXT,
+          images JSONB,
+          section VARCHAR(255),
+          is_house_manufactured BOOLEAN,
+          features JSONB,
+          specifications JSONB,
+          rating NUMERIC DEFAULT 5.0,
+          reviews_count INT DEFAULT 0
+        );
+      `;
+    });
   } catch (error) {
     console.error('Failed to initialize database table:', error);
   }
@@ -94,8 +111,10 @@ export async function getProducts(): Promise<Product[]> {
 
   try {
     await initDatabase();
-    const { rows } = await sql`SELECT * FROM products ORDER BY name ASC;`;
-    return rows.map(mapRowToProduct);
+    return await runQuery(async (client) => {
+      const { rows } = await client.sql`SELECT * FROM products ORDER BY name ASC;`;
+      return rows.map(mapRowToProduct);
+    });
   } catch (error) {
     console.error('Error fetching products from DB, falling back to local:', error);
     return fallbackProducts;
@@ -110,9 +129,11 @@ export async function getProductById(id: string): Promise<Product | null> {
 
   try {
     await initDatabase();
-    const { rows } = await sql`SELECT * FROM products WHERE id = ${id};`;
-    if (rows.length === 0) return null;
-    return mapRowToProduct(rows[0]);
+    return await runQuery(async (client) => {
+      const { rows } = await client.sql`SELECT * FROM products WHERE id = ${id};`;
+      if (rows.length === 0) return null;
+      return mapRowToProduct(rows[0]);
+    });
   } catch (error) {
     console.error(`Error fetching product ${id} from DB:`, error);
     return fallbackProducts.find(p => p.id === id) || null;
@@ -139,36 +160,38 @@ export async function upsertProduct(product: Product) {
     const featuresJson = JSON.stringify(product.features || []);
     const specsJson = JSON.stringify(product.specifications);
 
-    await sql`
-      INSERT INTO products (
-        id, name, category, price, description, image, images, section, is_house_manufactured, features, specifications, rating, reviews_count
-      ) VALUES (
-        ${product.id}, 
-        ${product.name}, 
-        ${product.category}, 
-        ${product.price}, 
-        ${product.description}, 
-        ${product.image}, 
-        ${imagesJson}, 
-        ${product.section}, 
-        ${product.isHouseManufactured}, 
-        ${featuresJson}, 
-        ${specsJson}, 
-        ${product.rating}, 
-        ${product.reviewsCount}
-      )
-      ON CONFLICT (id) DO UPDATE SET
-        name = EXCLUDED.name,
-        category = EXCLUDED.category,
-        price = EXCLUDED.price,
-        description = EXCLUDED.description,
-        image = EXCLUDED.image,
-        images = EXCLUDED.images,
-        section = EXCLUDED.section,
-        is_house_manufactured = EXCLUDED.is_house_manufactured,
-        features = EXCLUDED.features,
-        specifications = EXCLUDED.specifications;
-    `;
+    await runQuery(async (client) => {
+      await client.sql`
+        INSERT INTO products (
+          id, name, category, price, description, image, images, section, is_house_manufactured, features, specifications, rating, reviews_count
+        ) VALUES (
+          ${product.id}, 
+          ${product.name}, 
+          ${product.category}, 
+          ${product.price}, 
+          ${product.description}, 
+          ${product.image}, 
+          ${imagesJson}, 
+          ${product.section}, 
+          ${product.isHouseManufactured}, 
+          ${featuresJson}, 
+          ${specsJson}, 
+          ${product.rating}, 
+          ${product.reviewsCount}
+        )
+        ON CONFLICT (id) DO UPDATE SET
+          name = EXCLUDED.name,
+          category = EXCLUDED.category,
+          price = EXCLUDED.price,
+          description = EXCLUDED.description,
+          image = EXCLUDED.image,
+          images = EXCLUDED.images,
+          section = EXCLUDED.section,
+          is_house_manufactured = EXCLUDED.is_house_manufactured,
+          features = EXCLUDED.features,
+          specifications = EXCLUDED.specifications;
+      `;
+    });
   } catch (error) {
     console.error(`Error saving product ${product.id} to DB:`, error);
     throw error;
@@ -185,7 +208,9 @@ export async function deleteProduct(id: string) {
 
   try {
     await initDatabase();
-    await sql`DELETE FROM products WHERE id = ${id};`;
+    await runQuery(async (client) => {
+      await client.sql`DELETE FROM products WHERE id = ${id};`;
+    });
   } catch (error) {
     console.error(`Error deleting product ${id} from DB:`, error);
     throw error;
