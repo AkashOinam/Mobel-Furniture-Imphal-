@@ -123,7 +123,7 @@ export default function Footer() {
 
         {/* Bottom copyright bar */}
         <div className="mt-16 border-t border-slate-100 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Möbel Furniture Imphal. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Stupendous Interior. All rights reserved.</p>
           <div className="flex gap-6">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
