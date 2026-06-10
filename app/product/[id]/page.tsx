@@ -13,15 +13,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   
   if (!product) {
     return {
-      title: "Product Not Found | Möbel Furniture Imphal",
+      title: "Product Not Found | Stupendous Interior",
     };
   }
 
   return {
-    title: `${product.name} | Möbel Furniture Imphal`,
+    title: `${product.name} | Stupendous Interior`,
     description: product.description,
     openGraph: {
-      title: `${product.name} | Möbel Furniture Imphal`,
+      title: `${product.name} | Stupendous Interior`,
       description: product.description,
       images: [product.image],
     },

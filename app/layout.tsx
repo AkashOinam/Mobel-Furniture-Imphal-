@@ -22,11 +22,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Möbel Furniture Imphal | Premium Home & Office Furniture",
+  metadataBase: new URL("https://www.stupendousinterior.in"),
+  title: "Stupendous Interior | Premium Home & Office Furniture",
   description: "Retail partner of Möbel Furniture Kolkata. We design and craft high-quality ergonomic office chairs, tables, sofas, beds, wardrobes, and dining tables. Showroom in Imphal, Manipur.",
   keywords: "furniture, imphal, manipur, mobel furniture, office chairs, ergonomic chairs, sofas, dining tables, home decor, modern furniture",
   openGraph: {
-    title: "Möbel Furniture Imphal | Premium Home & Office Furniture",
+    title: "Stupendous Interior | Premium Home & Office Furniture",
     description: "Retail partner of Möbel Furniture Kolkata & Local Custom Furniture Workshop in Imphal.",
     images: ["/logo-v2.svg"],
   },
