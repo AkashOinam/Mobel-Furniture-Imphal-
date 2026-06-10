@@ -84,5 +84,27 @@ export const products: Product[] = [
     },
     "rating": 5,
     "reviewsCount": 0
+  },
+  {
+    "id": "dom-test-product",
+    "name": "DOM Test Product",
+    "category": "Bed",
+    "price": 0,
+    "description": "Testing the upload mechanism end-to-end",
+    "image": "https://res.cloudinary.com/dkxfacuxb/image/upload/v1781070834/mobel-furniture-products/home-furniture/bed/dom-test-product/ea60nxoknbije5a7iwmb.webp",
+    "images": [
+      "https://res.cloudinary.com/dkxfacuxb/image/upload/v1781070834/mobel-furniture-products/home-furniture/bed/dom-test-product/ea60nxoknbije5a7iwmb.webp"
+    ],
+    "section": "home",
+    "isHouseManufactured": false,
+    "features": [],
+    "specifications": {
+      "material": "",
+      "dimensions": "",
+      "warranty": "",
+      "assembly": ""
+    },
+    "rating": 5,
+    "reviewsCount": 0
   }
 ];

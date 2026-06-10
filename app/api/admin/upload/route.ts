@@ -3,17 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 
 const clean = (val?: string) => val?.trim().replace(/^["']|["']$/g, '') || '';
 
-const cloudName = clean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
-const apiKey = clean(process.env.CLOUDINARY_API_KEY);
-const apiSecret = clean(process.env.CLOUDINARY_API_SECRET);
-
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: cloudName,
-  api_key: apiKey,
-  api_secret: apiSecret,
-});
-
 export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('Authorization');
@@ -22,12 +11,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const cloudName = clean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+    const apiKey = clean(process.env.CLOUDINARY_API_KEY);
+    const apiSecret = clean(process.env.CLOUDINARY_API_SECRET);
+
     // Check if Cloudinary credentials are set
     if (!cloudName || !apiKey || !apiSecret) {
       return NextResponse.json({ 
         error: 'Cloudinary environment variables are missing on Vercel. Please add them in Vercel settings and Redeploy.' 
       }, { status: 500 });
     }
+
+    // Configure Cloudinary dynamically inside the handler
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
