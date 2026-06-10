@@ -1,20 +1,39 @@
-import { createClient } from '@vercel/postgres';
+import { Client } from 'pg';
 import fs from 'fs';
 import path from 'path';
 import { Product, products as fallbackProducts } from '../data/products';
 
-const isDbMode = () => !!(process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING);
+const isDbMode = () => !!(process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_DATABASE_URL);
 
-// Helper to run query with a temporary client connection (compatible with pooled & direct connection strings)
-async function runQuery<T>(callback: (client: any) => Promise<T>): Promise<T> {
-  let connectionString = process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
+// Helper to convert template literal query to parameter-based query for standard pg driver
+function sqlTag(strings: TemplateStringsArray, ...values: any[]) {
+  let queryText = '';
+  for (let i = 0; i < strings.length; i++) {
+    queryText += strings[i];
+    if (i < values.length) {
+      queryText += `$${i + 1}`;
+    }
+  }
+  return {
+    text: queryText,
+    values: values
+  };
+}
+
+// Helper to run query with a temporary client connection (compatible with standard pg driver)
+async function runQuery<T>(callback: (client: { sql: (strings: TemplateStringsArray, ...values: any[]) => Promise<any> }) => Promise<T>): Promise<T> {
+  let connectionString = process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_DATABASE_URL;
   if (connectionString) {
     connectionString = connectionString.trim().replace(/^["']|["']$/g, '');
   }
-  const client = createClient({ connectionString });
+  const client = new Client({ connectionString });
   await client.connect();
   try {
-    return await callback(client);
+    const sqlExecutor = async (strings: TemplateStringsArray, ...values: any[]) => {
+      const { text, values: parsedValues } = sqlTag(strings, ...values);
+      return await client.query(text, parsedValues);
+    };
+    return await callback({ sql: sqlExecutor });
   } finally {
     try {
       await client.end();
